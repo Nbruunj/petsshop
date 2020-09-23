@@ -36,6 +36,7 @@ namespace PetShop.RestAPI.Controllers
 
         // GET api/<PetTypeController>/5
         [HttpGet("{id}")]
+        [Route("[action]/{id}")]
         public ActionResult<PetType> Get(int id)
         {
             var petType = _petTypeService.FindPetTypeById(id);
@@ -57,6 +58,7 @@ namespace PetShop.RestAPI.Controllers
 
         // POST api/<PetTypeController>
         [HttpPost]
+
         public ActionResult<PetType> Post([FromBody] PetType petType)
         {
             if (string.IsNullOrEmpty(petType.Type))
