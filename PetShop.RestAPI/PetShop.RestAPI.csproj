@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
   </ItemGroup>
@@ -14,6 +15,7 @@
     <ProjectReference Include="..\PetShop.Core.Entity\PetShop.Core.Entity.csproj" />
     <ProjectReference Include="..\PetShop.Core\PetShop.Core.csproj" />
     <ProjectReference Include="..\PetShop.Infrastructure.Data\PetShop.Infrastructure.Data.csproj" />
+    <ProjectReference Include="..\petshop.infrastructure.SQL.data\petshop.infrastructure.SQL.data.csproj" />
   </ItemGroup>
 
 

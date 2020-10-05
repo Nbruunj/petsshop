@@ -5,7 +5,7 @@ using System.Text;
 
 namespace petshop.infrastructure.SQL.data.repositories
 {
-   public class petshopRepository: IPetRepository
+   public class petshopRepository
     {
     }
 }

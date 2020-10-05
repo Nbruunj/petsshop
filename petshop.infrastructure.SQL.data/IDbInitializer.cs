@@ -4,7 +4,8 @@ using System.Text;
 
 namespace petshop.infrastructure.SQL.data
 {
-    class AuthenticationHelper
+    public interface IDbInitializer
     {
+        void Initialize(TodoContext context);
     }
 }
