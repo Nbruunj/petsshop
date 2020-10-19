@@ -3,22 +3,25 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore.Internal;
 using PetShop.Core.Entity;
+using petshop.infrastructure.SQL.data.help;
 
 namespace petshop.infrastructure.SQL.data
 {
     public class DbInitializer : IDbInitializer
     {
+        private IAuthenticationHelper authenticationHelper;
+
+        public DbInitializer(IAuthenticationHelper authHelper)
+        {
+            authenticationHelper = authHelper;
+        }
+
         // This method will create and seed the database.
         public void Initialize(TodoContext context)
         {
-            // Delete the database, if it already exists. I do this because an
-            // existing database may not be compatible with the entity model,
-            // if the entity model was changed since the database was created.
-            // This operation has no effect for an in-memory database.
-            context.Database.EnsureDeleted();
-
-            // Create the database, if it does not already exists. This operation
-            // has no effect for an in-memory database.
+            // Create the database, if it does not already exists. If the database
+            // already exists, no action is taken (and no effort is made to ensure it
+            // is compatible with the model for this context).
             context.Database.EnsureCreated();
 
             // Look for any TodoItems
@@ -30,20 +33,28 @@ namespace petshop.infrastructure.SQL.data
             List<TodoItem> items = new List<TodoItem>
             {
                 new TodoItem { IsComplete=true, Name="Make homework"},
-                new TodoItem { IsComplete=false, Name="Sleep"}
+                new TodoItem { IsComplete=false, Name="Sleep"},
+                new TodoItem { IsComplete=false, Name="<h3>Message from a Black Hat! Ha, ha, ha...<h3>"}
             };
 
             // Create two users with hashed and salted passwords
+            string password = "1234";
+            byte[] passwordHashJoe, passwordSaltJoe, passwordHashAnn, passwordSaltAnn;
+            authenticationHelper.CreatePasswordHash(password, out passwordHashJoe, out passwordSaltJoe);
+            authenticationHelper.CreatePasswordHash(password, out passwordHashAnn, out passwordSaltAnn);
+
             List<User> users = new List<User>
             {
                 new User {
                     Username = "UserJoe",
-                    Password = "1234",
+                    PasswordHash = passwordHashJoe,
+                    PasswordSalt = passwordSaltJoe,
                     IsAdmin = false
                 },
                 new User {
                     Username = "AdminAnn",
-                    Password = "1234",
+                    PasswordHash = passwordHashAnn,
+                    PasswordSalt = passwordSaltAnn,
                     IsAdmin = true
                 }
             };
@@ -51,7 +62,9 @@ namespace petshop.infrastructure.SQL.data
             context.TodoItems.AddRange(items);
             context.Users.AddRange(users);
             context.SaveChanges();
+
         }
+
 
     }
 }
