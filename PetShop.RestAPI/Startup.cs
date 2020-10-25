@@ -38,17 +38,6 @@ namespace PetShop.RestAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IPetRepository, PetRepository>();
-            services.AddScoped<IPetService, PetService>();
-
-            services.AddScoped<IOwnerRepository, OwnerRepository>();
-            services.AddScoped<IOwnerService, OwnerService>();
-
-            services.AddScoped<IPetTypeRepository, PetTypeRepository>();
-            services.AddScoped<IPetTypeService, PetTypeService>();
-
-            
-
             // Create a byte array with random values. This byte array is used
             // to generate a key for signing JWT tokens.
             Byte[] secretBytes = new byte[40];
@@ -71,15 +60,14 @@ namespace PetShop.RestAPI
                 };
             });
 
-            // In-memory database:
-            services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
-
             // Register repositories for dependency injection
             services.AddScoped<IRepository<TodoItem>, TodoItemRepository>();
             services.AddScoped<IRepository<User>, UserRepository>();
 
+
             // Register database initializer
             services.AddTransient<IDbInitializer, DbInitializer>();
+
 
             // Register the AuthenticationHelper in the helpers folder for dependency
             // injection. It must be registered as a singleton service. The AuthenticationHelper
@@ -96,6 +84,25 @@ namespace PetShop.RestAPI
                         builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                     })
             );
+
+            // In-memory database:
+            services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
+
+
+            services.AddScoped<IPetRepository, PetRepository>();
+            services.AddScoped<IPetService, PetService>();
+
+            services.AddScoped<IOwnerRepository, OwnerRepository>();
+            services.AddScoped<IOwnerService, OwnerService>();
+
+            services.AddScoped<IPetTypeRepository, PetTypeRepository>();
+            services.AddScoped<IPetTypeService, PetTypeService>();
+
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
+
+
 
             //Register the Swagger generator using Swashbuckle.
             services.AddSwaggerGen(c =>
@@ -128,10 +135,10 @@ namespace PetShop.RestAPI
                     var petRepo = scope.ServiceProvider.GetService<IPetRepository>();
                     var ownerRepo = scope.ServiceProvider.GetService<IOwnerRepository>();
                     var petTypeRepo = scope.ServiceProvider.GetService<IPetTypeRepository>();
-                    new DataInit(petRepo, ownerRepo, petTypeRepo).InitData();
+                    
 
                     var services = scope.ServiceProvider;
-                    var dbContext = services.GetService<TodoContext>();
+                    var dbContext = scope.ServiceProvider.GetService<TodoContext>();
                     var dbInitializer = services.GetService<IDbInitializer>();
                     dbInitializer.Initialize(dbContext);
             }

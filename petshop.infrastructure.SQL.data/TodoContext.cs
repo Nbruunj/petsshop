@@ -13,6 +13,16 @@ namespace petshop.infrastructure.SQL.data
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Pet>()
+                .HasOne(p => p.Owner)
+                .WithMany(o => o.OwnerPetList)
+                .OnDelete(DeleteBehavior.SetNull);
+        }
+        public DbSet<Pet> Pets { get; set; }
+        public DbSet<Owner> Owners { get; set; }
+        public DbSet<PetType> PetTypes { get; set; }
         public DbSet<TodoItem> TodoItems { get; set; }
         public DbSet<User> Users { get; set; }
     }

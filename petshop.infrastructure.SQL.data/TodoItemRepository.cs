@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using PetShop.Core.Entity;
 
+
 namespace petshop.infrastructure.SQL.data
 {
     public class TodoItemRepository : IRepository<TodoItem>
@@ -16,7 +17,7 @@ namespace petshop.infrastructure.SQL.data
             db = context;
         }
 
-        public IEnumerable<TodoItem> GetAll()
+         public IEnumerable<TodoItem> GetAll()
         {
             return db.TodoItems.ToList();
         }
