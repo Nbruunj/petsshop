@@ -5,17 +5,16 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using PetShop.Core.Entity;
 
-namespace petshop.infrastructure.SQL.data
+namespace PetShop.Infrastructure.Database
 {
-    public class UserRepository : IRepository<User>
+    public class UserRepository : IUserRepository<User>
     {
-        private readonly TodoContext db;
+        private readonly PetShopContext db;
 
-        public UserRepository(TodoContext context)
+        public UserRepository(PetShopContext context)
         {
             db = context;
         }
-
         public IEnumerable<User> GetAll()
         {
             return db.Users.ToList();
@@ -23,7 +22,7 @@ namespace petshop.infrastructure.SQL.data
 
         public User Get(long id)
         {
-            return db.Users.FirstOrDefault(b => b.id == id);
+            return db.Users.FirstOrDefault(b => b.Id == id);
         }
 
         public void Add(User entity)
@@ -40,7 +39,7 @@ namespace petshop.infrastructure.SQL.data
 
         public void Remove(long id)
         {
-            var item = db.Users.FirstOrDefault(b => b.id == id);
+            var item = db.Users.FirstOrDefault(b => b.Id == id);
             db.Users.Remove(item);
             db.SaveChanges();
         }

@@ -5,12 +5,12 @@ using System.Text;
 using PetShop.Core.DomainServices;
 using PetShop.Core.Entity;
 
-namespace petshop.infrastructure.SQL.data.repositories
+namespace PetShop.Infrastructure.Database.Repositories
 {
-    public class PetTypeRepository : IPetTypeRepository
+    public class PetTypeSqlRepository : IPetTypeRepository
     {
-        private readonly TodoContext _ctx;
-        public PetTypeRepository(TodoContext ctx)
+        private readonly PetShopContext _ctx;
+        public PetTypeSqlRepository(PetShopContext ctx)
         {
             _ctx = ctx;
         }

@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,15 +11,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.IdentityModel.JsonWebTokens;
 using PetShop.Core.ApplicationServices;
 using PetShop.Core.ApplicationServices.Services;
 using PetShop.Core.DomainServices;
-using PetShop.Core.Entity;
 using PetShop.Infrastructure.Data;
-using petshop.infrastructure.SQL.data;
-using petshop.infrastructure.SQL.data.help;
+using PetShop.Infrastructure.Database;
+using PetShop.Infrastructure.Database.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using PetShop.Core.Entity;
+using PetShop.Infrastructure.Database.Helpers;
 
 namespace PetShop.RestAPI
 {
@@ -38,8 +37,6 @@ namespace PetShop.RestAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Create a byte array with random values. This byte array is used
-            // to generate a key for signing JWT tokens.
             Byte[] secretBytes = new byte[40];
             Random rand = new Random();
             rand.NextBytes(secretBytes);
@@ -60,14 +57,13 @@ namespace PetShop.RestAPI
                 };
             });
 
-            // Register repositories for dependency injection
-            services.AddScoped<IRepository<TodoItem>, TodoItemRepository>();
-            services.AddScoped<IRepository<User>, UserRepository>();
 
+            // Register repositories for dependency injection
+            services.AddScoped<IUserRepository<TodoItem>, TodoItemRepository>();
+            services.AddScoped<IUserRepository<User>, UserRepository>();
 
             // Register database initializer
-            services.AddTransient<IDbInitializer, DbInitializer>();
-
+            services.AddTransient<IDBInitializer, DBInitializer>();
 
             // Register the AuthenticationHelper in the helpers folder for dependency
             // injection. It must be registered as a singleton service. The AuthenticationHelper
@@ -85,17 +81,17 @@ namespace PetShop.RestAPI
                     })
             );
 
-            // In-memory database:
-            services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
+            services.AddDbContext<PetShopContext>(
+                opt => opt.UseInMemoryDatabase("ThaDb")
+                );
 
-
-            services.AddScoped<IPetRepository, PetRepository>();
+            services.AddScoped<IPetRepository, PetSqlRepository>();
             services.AddScoped<IPetService, PetService>();
 
-            services.AddScoped<IOwnerRepository, OwnerRepository>();
+            services.AddScoped<IOwnerRepository, OwnerSqlRepository>();
             services.AddScoped<IOwnerService, OwnerService>();
 
-            services.AddScoped<IPetTypeRepository, PetTypeRepository>();
+            services.AddScoped<IPetTypeRepository, PetTypeSqlRepository>();
             services.AddScoped<IPetTypeService, PetTypeService>();
 
             services.AddControllers().AddNewtonsoftJson(options =>
@@ -104,25 +100,19 @@ namespace PetShop.RestAPI
 
 
 
-            //Register the Swagger generator using Swashbuckle.
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "ToDo API",
-                    Description = "A simple example ASP.NET Core Web API"
-                });
-
-                // Set the comments path for the Swagger JSON and UI.
-                
-            });
 
             services.AddControllers();
 
-
+            services.AddSwaggerGen(options => {
+                options.SwaggerDoc("v2",
+                    new Microsoft.OpenApi.Models.OpenApiInfo
+                    {
+                        Title = "Swagger Demo API",
+                        Description = "Demo API for showing Swagger",
+                        Version = "v1"
+                    });
+            });
         }
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -135,20 +125,20 @@ namespace PetShop.RestAPI
                     var petRepo = scope.ServiceProvider.GetService<IPetRepository>();
                     var ownerRepo = scope.ServiceProvider.GetService<IOwnerRepository>();
                     var petTypeRepo = scope.ServiceProvider.GetService<IPetTypeRepository>();
-                    
 
                     var services = scope.ServiceProvider;
-                    var dbContext = scope.ServiceProvider.GetService<TodoContext>();
-                    var dbInitializer = services.GetService<IDbInitializer>();
-                    dbInitializer.Initialize(dbContext);
-            }
+                    var ctx = scope.ServiceProvider.GetService<PetShopContext>(); 
+                    var dbInitializer = services.GetService<IDBInitializer>();
+                    dbInitializer.SeedDB(ctx);
+
+                    //new DataInit(petRepo, ownerRepo, petTypeRepo).InitData(); fuck this fucker
+                }
             //}
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            // Enable CORS (after UseRouting and before UseAuthorization).
             app.UseCors();
 
             app.UseAuthentication();

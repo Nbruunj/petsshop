@@ -26,13 +26,12 @@ namespace PetShop.RestAPI.Controllers
         {
             try
             {
-                return (_ownerService.GetAllOwners());
+                return Ok(_ownerService.GetAllOwners());
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, "Id must be greater than 0");
+                return StatusCode(500, "Something is not right..");
             }
-            
         }
 
         // GET api/<PetShopController>/5
@@ -40,19 +39,19 @@ namespace PetShop.RestAPI.Controllers
         [Route("[action]/{id}")]
         public ActionResult<Owner> Get(int id)
         {
-            var owner = _ownerService.FindOwnerById(id);
-            if (owner == null)
+            var foundOwner = _ownerService.FindOwnerById(id);
+            if (foundOwner == null)
             {
-                return StatusCode(404, "Did not find Customer with ID " + id);
+                return StatusCode(404, "Owner was not found");
             }
 
             try
             {
-                return _ownerService.FindOwnerById(id);
+                return foundOwner;
             }
             catch (Exception e)
             {
-                return StatusCode(500, "task failed successfully");
+                return StatusCode(500, "Yes it sucks. Deal with it");
             }
         }
 
@@ -62,30 +61,33 @@ namespace PetShop.RestAPI.Controllers
         {
             if (string.IsNullOrEmpty(owner.Name))
             {
-                return StatusCode(500, "someting went wrong");
+                return StatusCode(500, "Name is required for creating a owner");
+            }
+
+            if (string.IsNullOrEmpty(owner.Address))
+            {
+                return StatusCode(500, "Address is required for creating an owner");
             }
             return _ownerService.CreateOwner(owner);
-
-            
         }
 
         // PUT api/<PetShopController>/5
         [HttpPut("{id}")]
         public ActionResult<Owner> Put(int id, [FromBody] Owner owner)
         {
-            var updateowner = _ownerService.CreateOwner(owner);
-            if (updateowner == null)
+            var updateOwner = _ownerService.UpdateOwner(owner);
+            if (updateOwner == null)
             {
-                StatusCode(404, "owner was not found!");
+                return StatusCode(404, "Owner was not found");
             }
 
             try
             {
-                return updateowner;
+                return updateOwner;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, "do much better plz");
+                return StatusCode(500, "Shit happens.");
             }
         }
 
@@ -93,34 +95,33 @@ namespace PetShop.RestAPI.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Owner> Delete(int id)
         {
-            var owner = _ownerService.DeleteOwner(id);
-            if (owner == null)
+            var deleteOwner = _ownerService.DeleteOwner(id);
+            if (deleteOwner == null)
             {
-                return StatusCode(404, "Did not find Customer with ID " + id);
+                return StatusCode(404, "Owner was not found");
             }
-
             try
             {
-                return owner;
+                return deleteOwner;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, "something went wrong");
+                return StatusCode(500, "Did not work.");
             }
         }
+
         [HttpGet("{name}")]
         [Route("[action]/{name}")]
-        public ActionResult<List<Owner>> GetFilteredName(string name)
+        public ActionResult<List<Owner>> GetFilteredOwners(string name)
         {
-            var ownername = _ownerService.GetAllByName(name);
-
+            var owner = _ownerService.GetAllByName(name);
             try
             {
-                return ownername;
+                return Ok(owner);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, "something went wrong");
+                return StatusCode(500, "Something went horribly wrong during execution. Pathetic.");
             }
         }
     }

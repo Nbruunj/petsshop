@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using PetShop.Core.Entity;
 
 namespace PetShop.Core.DomainServices
@@ -13,6 +12,5 @@ namespace PetShop.Core.DomainServices
         IEnumerable<Owner> ReadOwners();
         Owner Update(Owner ownerUpdate);
         Owner Delete(int id);
-       
     }
 }

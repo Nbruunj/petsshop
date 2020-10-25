@@ -1,17 +1,17 @@
-﻿using PetShop.Core.DomainServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using PetShop.Core.DomainServices;
 using PetShop.Core.Entity;
 
-namespace petshop.infrastructure.SQL.data.repositories
+namespace PetShop.Infrastructure.Database.Repositories
 {
-   public class petshopRepository : IPetRepository
+    public class PetSqlRepository : IPetRepository
     {
-        private readonly TodoContext _ctx;
-        public petshopRepository(TodoContext ctx)
+        private readonly PetShopContext _ctx;
+        public PetSqlRepository(PetShopContext ctx)
         {
             _ctx = ctx;
         }
@@ -25,7 +25,7 @@ namespace petshop.infrastructure.SQL.data.repositories
 
         public Pet Delete(int id)
         {
-            var petRemoved = _ctx.Remove(new Pet { Id = id }).Entity;
+            var petRemoved = _ctx.Remove(new Pet {Id = id}).Entity;
             _ctx.SaveChanges();
             return petRemoved;
         }

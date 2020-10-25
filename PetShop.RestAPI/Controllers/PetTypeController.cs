@@ -27,11 +27,11 @@ namespace PetShop.RestAPI.Controllers
             {
                 return Ok(_petTypeService.GetPetTypes());
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, "Id must be greater than 0");
+                return StatusCode(500,
+                    "Hmm yes, I can sense something is wrong... Not gonna tell you what tho, you'll have to figure it out.");
             }
-            
         }
 
         // GET api/<PetTypeController>/5
@@ -40,30 +40,28 @@ namespace PetShop.RestAPI.Controllers
         public ActionResult<PetType> Get(int id)
         {
             var petType = _petTypeService.FindPetTypeById(id);
+
             if (petType == null)
             {
-                return StatusCode(404, "Did not find Customer with ID " + id);
+                return StatusCode(404, "Pet was not found.");
             }
-
             try
             {
-                return _petTypeService.FindPetTypeById(id);
+                return Ok(petType);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, "task failed successfully");
+                return StatusCode(500, "Something went horribly wrong. Sucks to suck");
             }
-                          
         }
 
         // POST api/<PetTypeController>
         [HttpPost]
-
         public ActionResult<PetType> Post([FromBody] PetType petType)
         {
             if (string.IsNullOrEmpty(petType.Type))
             {
-                return StatusCode(500, "someting went wrong");
+                return StatusCode(500, "Something went wrong.");
             }
             return _petTypeService.CreatePetType(petType);
         }
@@ -72,55 +70,57 @@ namespace PetShop.RestAPI.Controllers
         [HttpPut("{id}")]
         public ActionResult<PetType> Put(int id, [FromBody] PetType petType)
         {
-             var updatePet = _petTypeService.UpdatePetType(petType);
-             if (updatePet == null)
-             {
-                 StatusCode(404, "pet was not found!");
-             }
+            var updatePet = _petTypeService.UpdatePetType(petType);
+            if(updatePet == null)
+            {
+                return StatusCode(404, "Pet was not found");
+            }
 
-             try
-             {
-                 return updatePet;
-             }
-             catch (Exception e)
-             {
-                 return StatusCode(500, "do much better plz");
-             }
+            try
+            {
+                return updatePet;
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Do better");
+            }
+
         }
 
         // DELETE api/<PetTypeController>/5
         [HttpDelete("{id}")]
         public ActionResult<PetType> Delete(int id)
         {
-            var deletePetType = _petTypeService.DeletePetType(id);
-            if (deletePetType == null)
+            var deletePet = _petTypeService.DeletePetType(id);
+            if (deletePet == null)
             {
-                return StatusCode(404, "Did not find Customer with ID " + id);
+                return StatusCode(404, "Pet was not found");
             }
 
             try
             {
-                return deletePetType;
+                return deletePet;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, "something went wrong");
+                return StatusCode(500, "Something went horribly wrong");
             }
         }
         [HttpGet("{type}")]
         [Route("[action]/{type}")]
-        public ActionResult<List<PetType>> GetFilteredName(string type)
+        public ActionResult<PetType> GetFilteredPetTypes(string type)
         {
-            var pettypename = _petTypeService.GetAllByName(type);
+            var petType= _petTypeService.GetAllByType(type);
+
             try
             {
-                return pettypename;
+                return Ok(petType);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, "something went wrong");
+                return StatusCode(500, "Something went horribly wrong during execution. Rename please.");
             }
-            
         }
+
     }
 }

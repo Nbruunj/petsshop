@@ -5,19 +5,18 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using PetShop.Core.Entity;
 
-
-namespace petshop.infrastructure.SQL.data
+namespace PetShop.Infrastructure.Database
 {
-    public class TodoItemRepository : IRepository<TodoItem>
+    public class TodoItemRepository : IUserRepository<TodoItem>
     {
-        private readonly TodoContext db;
+        private readonly PetShopContext db;
 
-        public TodoItemRepository(TodoContext context)
+        public TodoItemRepository(PetShopContext context)
         {
             db = context;
         }
 
-         public IEnumerable<TodoItem> GetAll()
+        public IEnumerable<TodoItem> GetAll()
         {
             return db.TodoItems.ToList();
         }

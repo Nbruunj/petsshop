@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using PetShop.Core.DomainServices;
 using PetShop.Core.Entity;
 
-namespace PetShop.Infrastructure.Data
+namespace PetShop.Infrastructure.Data.Repositories
 {
     public class OwnerRepository : IOwnerRepository
     {

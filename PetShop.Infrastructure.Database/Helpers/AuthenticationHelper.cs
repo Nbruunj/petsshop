@@ -1,13 +1,12 @@
-﻿using System;
+﻿using PetShop.Core.Entity;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using PetShop.Core.Entity;
-using petshop.infrastructure.SQL.data.help;
 
-namespace petshop.infrastructure.SQL.data
+namespace PetShop.Infrastructure.Database.Helpers
 {
     public class AuthenticationHelper : IAuthenticationHelper
     {
@@ -18,7 +17,6 @@ namespace petshop.infrastructure.SQL.data
             secretBytes = secret;
         }
 
-        // This method generates and returns a JWT token for a user.
         public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
@@ -28,19 +26,7 @@ namespace petshop.infrastructure.SQL.data
             }
         }
 
-        public bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
-        {
-            using (var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt))
-            {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                for (int i = 0; i < computedHash.Length; i++)
-                {
-                    if (computedHash[i] != storedHash[i]) return false;
-                }
-            }
-            return true;
-        }
-
+        // This method generates and returns a JWT token for a user.
         public string GenerateToken(User user)
         {
             var claims = new List<Claim>
@@ -64,5 +50,17 @@ namespace petshop.infrastructure.SQL.data
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        public bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt))
+            {
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                for (int i = 0; i < computedHash.Length; i++)
+                {
+                    if (computedHash[i] != storedHash[i]) return false;
+                }
+            }
+            return true;
+        }
     }
 }

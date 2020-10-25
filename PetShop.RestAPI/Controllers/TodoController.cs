@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetShop.Core.Entity;
-using petshop.infrastructure.SQL.data;
+using PetShop.Infrastructure.Database;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PetShop.RestAPI.Controllers
 {
@@ -14,9 +16,9 @@ namespace PetShop.RestAPI.Controllers
     [ApiController]
     public class TodoController : Controller
     {
-        private readonly IRepository<TodoItem> repository;
+        private readonly IUserRepository<TodoItem> repository;
 
-        public TodoController(IRepository<TodoItem> repos)
+        public TodoController(IUserRepository<TodoItem> repos)
         {
             repository = repos;
         }

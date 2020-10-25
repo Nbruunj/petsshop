@@ -20,7 +20,6 @@ namespace PetShop.RestAPI.Controllers
         {
             _petService = petService;
         }
-
         /// <summary>
         /// Returns list of all pets as JSON
         /// </summary>
@@ -30,12 +29,11 @@ namespace PetShop.RestAPI.Controllers
         {
             try
             {
-                return _petService.GetPets();
+                return Ok(_petService.GetPets());
             }
-
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, "do much better plz");
+                return StatusCode(500, "Couldn't get the Pets... Try again, perhaps?");
             }
         }
 
@@ -48,19 +46,18 @@ namespace PetShop.RestAPI.Controllers
         [Route("[action]/{id}")]
         public ActionResult<Pet> Get(int id)
         {
-            var foundpet = _petService.FindPetById(id);
-            if (foundpet == null)
+            var foundPet = _petService.FindPetById(id);
+            if (foundPet == null)
             {
-                return StatusCode(404, "pet was not found!");
+                return StatusCode(404, "Pet was not found");
             }
-
             try
             {
-                return foundpet;
+                return foundPet;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, "do much better plz");
+                return StatusCode(500, "When will you learn that something went wrong?");
             }
         }
 
@@ -72,12 +69,12 @@ namespace PetShop.RestAPI.Controllers
         [HttpPost]
         public ActionResult<Pet> Post([FromBody] Pet pet)
         {
-            if (string.IsNullOrEmpty(pet.Name))
+            if(string.IsNullOrEmpty(pet.Name))
             {
-                return StatusCode(500, "someting went wrong");
+                return StatusCode(500, "Name is required for creating a pet");
             }
 
-            return _petService.CreatePet(pet);
+            return _petService.CreatePet(pet); 
         }
 
 
@@ -92,16 +89,16 @@ namespace PetShop.RestAPI.Controllers
             var updatePet = _petService.UpdatePet(pet);
             if (updatePet == null)
             {
-                StatusCode(404, "pet was not found!");
+                return StatusCode(404, "Pet was not found");
             }
 
             try
             {
                 return updatePet;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, "do much better plz");
+                return StatusCode(500, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
             }
         }
 
@@ -112,39 +109,36 @@ namespace PetShop.RestAPI.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Pet> Delete(int id)
         {
-            var pet = _petService.DeletePet(id);
-            if (pet == null)
+            var deletePet = _petService.DeletePet(id);
+            if (deletePet == null)
             {
-                return StatusCode(404, "Did not find Customer with ID " + id);
+                return StatusCode(404, "Pet was not found");
             }
 
             try
             {
-                return pet;
+                return deletePet;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, "something went wrong");
+                return StatusCode(500, "Nope.");
             }
-
         }
 
         [HttpGet("{type}")]
         [Route("[action]/{type}")]
-        public ActionResult<List<Pet>> Getfiltered(string type)
+        public ActionResult<Pet> GetFilteredPets(string type)
         {
-            var pettype = _petService.GetAllByType(type);
+            var pet = _petService.GetAllByType(type); ;
+
             try
             {
-                return pettype;
+                return Ok(pet);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, "something went wrong");
+                return StatusCode(500, "Something went horribly wrong during execution. I don't know what to tell you.");
             }
         }
-
-
     }
-    
 }

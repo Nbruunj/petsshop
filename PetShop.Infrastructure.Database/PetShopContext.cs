@@ -4,20 +4,20 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using PetShop.Core.Entity;
 
-namespace petshop.infrastructure.SQL.data
+namespace PetShop.Infrastructure.Database
 {
-    public class TodoContext : DbContext
+    public class PetShopContext: DbContext
     {
-        public TodoContext(DbContextOptions<TodoContext> options)
-            : base(options)
+        public PetShopContext(DbContextOptions<PetShopContext> opt) : base(opt)
         {
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Pet>()
                 .HasOne(p => p.Owner)
-                .WithMany(o => o.OwnerPetList)
+                .WithMany(o => o.Pets)
                 .OnDelete(DeleteBehavior.SetNull);
         }
         public DbSet<Pet> Pets { get; set; }

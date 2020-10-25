@@ -3,64 +3,57 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore.Internal;
 using PetShop.Core.Entity;
-using petshop.infrastructure.SQL.data.help;
+using PetShop.Infrastructure.Database.Helpers;
 
-namespace petshop.infrastructure.SQL.data
+namespace PetShop.Infrastructure.Database
 {
-    public class DbInitializer : IDbInitializer
+    public class DBInitializer : IDBInitializer
     {
         private IAuthenticationHelper authenticationHelper;
 
-        public DbInitializer(IAuthenticationHelper authHelper)
+        public DBInitializer(IAuthenticationHelper authHelper)
         {
             authenticationHelper = authHelper;
         }
-        public void Initialize(TodoContext ctx)
-        {  
+        public void SeedDB(PetShopContext ctx)
+        {
             ctx.Database.EnsureDeleted();
             ctx.Database.EnsureCreated();
             var owner1 = ctx.Owners.Add(new Owner()
             {
-                Name = "Darth Vader",
-                Address = "death star"
+                Name = "MichaelJackson",
+                Address = "NeverLand"
             }).Entity;
             var owner2 = ctx.Owners.Add(new Owner()
             {
-                Name = "random dude",
-                Address = "the street"
+                Name = "FogHat",
+                Address = "GreatMusicStreet"
             }).Entity;
             var pet1 = ctx.Pets.Add(new Pet()
             {
-                Name = "yoda",
-                Type = "mutant",
-                Color = "grøn",
-                BirthDate = new DateTime(896, 6, 10),
-                Price = 5000,
-                SoldDate = new DateTime(1652, 7, 10),
-                PreviousOwner = "ingen",
+                Name = "BillyJoel",
+                Type = "Dog",
+                Color = "Golden",
+                BirthDate = new DateTime(2018, 6, 10),
+                Price = 100,
+                SoldDate = new DateTime(2018, 7, 10),
+                PreviousOwner = "JohnnyBravo",
                 Owner = owner1
             }).Entity;
             var pet2 = ctx.Pets.Add(new Pet()
 
             {
-                Name = "Nem",
-                Type = "fish",
-                Color = "gold",
-                BirthDate = new DateTime(2003, 4, 22),
-                Price = 20,
-                SoldDate = new DateTime(2003, 6, 1),
-                PreviousOwner = "petshop",
+                Name = "MichaelJackson",
+                Type = "Cat",
+                Color = "Black",
+                BirthDate = new DateTime(2015, 4, 22),
+                Price = 100,
+                SoldDate = new DateTime(2020, 6, 1),
+                PreviousOwner = "HallAndOates",
                 Owner = owner2
             }).Entity;
 
-            // This method will create and seed the database.
 
-            // Create the database, if it does not already exists. If the database
-            // already exists, no action is taken (and no effort is made to ensure it
-            // is compatible with the model for this context).
-            ctx.Database.EnsureCreated();
-
-            // Look for any TodoItems
             if (ctx.TodoItems.Any())
             {
                 return;   // DB has been seeded
@@ -98,11 +91,6 @@ namespace petshop.infrastructure.SQL.data
             ctx.TodoItems.AddRange(items);
             ctx.Users.AddRange(users);
             ctx.SaveChanges();
-
         }
-
-
     }
-
-        
-    }
+}

@@ -1,18 +1,18 @@
-﻿using System;
+﻿using PetShop.Core.DomainServices;
+using PetShop.Core.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using PetShop.Core.DomainServices;
-using PetShop.Core.Entity;
 
-namespace petshop.infrastructure.SQL.data.repositories
+namespace PetShop.Infrastructure.Database.Repositories
 {
-    public class OwnerRepository : IOwnerRepository
+    public class OwnerSqlRepository : IOwnerRepository
     {
-        private readonly TodoContext _ctx;
-        public OwnerRepository(TodoContext ctx)
+        private readonly PetShopContext _ctx;
+        public OwnerSqlRepository(PetShopContext ctx)
         {
             _ctx = ctx;
         }
@@ -32,7 +32,7 @@ namespace petshop.infrastructure.SQL.data.repositories
 
         public Owner ReadById(int id)
         {
-            return _ctx.Owners.AsTracking().Include(o => o.OwnerPetList).FirstOrDefault(o => o.Id == id);
+            return _ctx.Owners.AsTracking().Include(o => o.Pets).FirstOrDefault(o => o.Id == id);
         }
 
         public IEnumerable<Owner> ReadOwners()

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace petshop.infrastructure.SQL.data
+namespace PetShop.Infrastructure.Database
 {
-    public interface IRepository<T>
+    public interface IUserRepository<T>
     {
         IEnumerable<T> GetAll();
         T Get(long id);

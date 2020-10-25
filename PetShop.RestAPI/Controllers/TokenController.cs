@@ -1,28 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using PetShop.Core.Entity;
-using petshop.infrastructure.SQL.data;
-using petshop.infrastructure.SQL.data.help;
+using PetShop.Infrastructure.Database;
+using PetShop.Infrastructure.Database.Helpers;
 
 namespace PetShop.RestAPI.Controllers
 {
-    [Route("api/token")]
+    [Route("/api/token")]
     [ApiController]
     public class TokenController : Controller
     {
-        private IRepository<User> repository;
+        private IUserRepository<User> repository;
         private IAuthenticationHelper authenticationHelper;
 
-        public TokenController(IRepository<User> repos, IAuthenticationHelper authHelper)
+        public TokenController(IUserRepository<User> repos, IAuthenticationHelper authHelper)
         {
             repository = repos;
             authenticationHelper = authHelper;
         }
-
 
         [HttpPost]
         public IActionResult Login([FromBody] LoginInputModel model)
