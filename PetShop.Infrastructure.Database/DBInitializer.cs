@@ -21,35 +21,35 @@ namespace PetShop.Infrastructure.Database
             ctx.Database.EnsureCreated();
             var owner1 = ctx.Owners.Add(new Owner()
             {
-                Name = "MichaelJackson",
-                Address = "NeverLand"
+                Name = "Darth Vader",
+                Address = "death star"
             }).Entity;
             var owner2 = ctx.Owners.Add(new Owner()
             {
-                Name = "FogHat",
-                Address = "GreatMusicStreet"
+                Name = "random dude",
+                Address = "the street"
             }).Entity;
             var pet1 = ctx.Pets.Add(new Pet()
             {
-                Name = "BillyJoel",
-                Type = "Dog",
-                Color = "Golden",
-                BirthDate = new DateTime(2018, 6, 10),
-                Price = 100,
-                SoldDate = new DateTime(2018, 7, 10),
-                PreviousOwner = "JohnnyBravo",
+                Name = "yoda",
+                Type = "mutant",
+                Color = "grøn",
+                BirthDate = new DateTime(896, 6, 10),
+                Price = 5000,
+                SoldDate = new DateTime(1652, 7, 10),
+                PreviousOwner = "ingen",
                 Owner = owner1
             }).Entity;
             var pet2 = ctx.Pets.Add(new Pet()
 
             {
-                Name = "MichaelJackson",
-                Type = "Cat",
-                Color = "Black",
-                BirthDate = new DateTime(2015, 4, 22),
-                Price = 100,
-                SoldDate = new DateTime(2020, 6, 1),
-                PreviousOwner = "HallAndOates",
+                Name = "Nem",
+                Type = "fish",
+                Color = "gold",
+                BirthDate = new DateTime(2003, 4, 22),
+                Price = 20,
+                SoldDate = new DateTime(2003, 6, 1),
+                PreviousOwner = "petshop",
                 Owner = owner2
             }).Entity;
 

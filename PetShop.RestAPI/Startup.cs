@@ -131,7 +131,7 @@ namespace PetShop.RestAPI
                     var dbInitializer = services.GetService<IDBInitializer>();
                     dbInitializer.SeedDB(ctx);
 
-                    //new DataInit(petRepo, ownerRepo, petTypeRepo).InitData(); fuck this fucker
+                    
                 }
             //}
 

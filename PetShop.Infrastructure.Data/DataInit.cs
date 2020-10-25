@@ -26,26 +26,26 @@ namespace PetShop.Infrastructure.Data
         {
             var petType = new PetType
             {
-                Type = "Giraffe"
+                Type = "dyr"
             };
             _petTypeRepository.Create(petType);
             PetTypes.Add(petType);
 
             var pet1 = new Pet
             {
-                Name = "Billy Joel",
+                Name = "job",
                 Type = "Dog",
                 Color = "Golden",
                 BirthDate = new DateTime(2018, 6, 10),
                 Price = 100,
                 SoldDate = new DateTime(2018, 7, 10),
-                PreviousOwner = "JohnnyBravo"
+                PreviousOwner = "mads"
             };
 
             var owner1 = new Owner
             {
-                Name = "MichaelJackson",
-                Address = "JohnnyBravo Street"
+                Name = "hans",
+                Address = "treet"
             };
             _petRepository.Create(pet1);
             _ownerRepository.Create(owner1);
