@@ -30,7 +30,7 @@ namespace PetShop.RestAPI.Controllers
             catch (Exception)
             {
                 return StatusCode(500,
-                    "Hmm yes, I can sense something is wrong... Not gonna tell you what tho, you'll have to figure it out.");
+                    "wrong....");
             }
         }
 
@@ -51,7 +51,7 @@ namespace PetShop.RestAPI.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(500, "Something went horribly wrong. Sucks to suck");
+                return StatusCode(500, "Something went wrong.");
             }
         }
 
@@ -61,7 +61,7 @@ namespace PetShop.RestAPI.Controllers
         {
             if (string.IsNullOrEmpty(petType.Type))
             {
-                return StatusCode(500, "Something went wrong.");
+                return StatusCode(500, "Something wrong.");
             }
             return _petTypeService.CreatePetType(petType);
         }
@@ -82,7 +82,7 @@ namespace PetShop.RestAPI.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(500, "Do better");
+                return StatusCode(500, "better");
             }
 
         }
@@ -103,7 +103,7 @@ namespace PetShop.RestAPI.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(500, "Something went horribly wrong");
+                return StatusCode(500, "Something went wrong");
             }
         }
         [HttpGet("{type}")]
@@ -118,7 +118,7 @@ namespace PetShop.RestAPI.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(500, "Something went horribly wrong during execution. Rename please.");
+                return StatusCode(500, "Task failed successfully.");
             }
         }
 
