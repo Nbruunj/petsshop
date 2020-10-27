@@ -33,7 +33,7 @@ namespace PetShop.RestAPI.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(500, "Couldn't get the Pets... Try again, perhaps?");
+                return StatusCode(500, " Try again");
             }
         }
 
@@ -57,7 +57,7 @@ namespace PetShop.RestAPI.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(500, "When will you learn that something went wrong?");
+                return StatusCode(500, "something went wrong?");
             }
         }
 
@@ -98,7 +98,7 @@ namespace PetShop.RestAPI.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(500, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                return StatusCode(500, "A");
             }
         }
 
@@ -137,7 +137,7 @@ namespace PetShop.RestAPI.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(500, "Something went horribly wrong during execution. I don't know what to tell you.");
+                return StatusCode(500, "Something went wrong.");
             }
         }
     }

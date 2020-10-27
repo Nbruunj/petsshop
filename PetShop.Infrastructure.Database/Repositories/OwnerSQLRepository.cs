@@ -42,7 +42,18 @@ namespace PetShop.Infrastructure.Database.Repositories
 
         public Owner Update(Owner ownerUpdate)
         {
-            throw new NotImplementedException();
+            _ctx.Attach(ownerUpdate).State = EntityState.Modified;
+            _ctx.Entry(ownerUpdate).Collection(o => o.Pets).IsModified = true;
+            var pets = _ctx.Pets.Where(p => p.Owner.Id == ownerUpdate.Id
+                                            && !ownerUpdate.Pets.Exists(po => po.Id == p.Id));
+
+            foreach (var pet in pets)
+            {
+                pet.Owner = null;
+                _ctx.Entry(pet).Reference(p => p.Owner).IsModified = true;
+            }
+            _ctx.SaveChanges();
+            return ownerUpdate;
         }
     }
 }

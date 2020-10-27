@@ -11,6 +11,7 @@ namespace PetShop.Infrastructure.Database.Repositories
     public class PetSqlRepository : IPetRepository
     {
         private readonly PetShopContext _ctx;
+
         public PetSqlRepository(PetShopContext ctx)
         {
             _ctx = ctx;
@@ -18,9 +19,9 @@ namespace PetShop.Infrastructure.Database.Repositories
 
         public Pet Create(Pet pet)
         {
-            var createdPet = _ctx.Pets.Add(pet).Entity;
+            _ctx.Attach(pet).State = EntityState.Added;
             _ctx.SaveChanges();
-            return createdPet;
+            return pet;
         }
 
         public Pet Delete(int id)
@@ -42,7 +43,10 @@ namespace PetShop.Infrastructure.Database.Repositories
 
         public Pet Update(Pet petUpdate)
         {
-            throw new NotImplementedException();
+            _ctx.Attach(petUpdate).State = EntityState.Modified;
+            _ctx.Entry(petUpdate).Reference(p => p.Owner).IsModified = true;
+            _ctx.SaveChanges();
+            return petUpdate;
         }
     }
 }

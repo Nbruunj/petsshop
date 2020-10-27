@@ -11,7 +11,7 @@ using PetShop.Infrastructure.Database;
 
 namespace PetShop.RestAPI.Controllers
 {
-    [Produces("application/json")]
+    
     [Route("[controller]")]
     [ApiController]
     public class TodoController : Controller

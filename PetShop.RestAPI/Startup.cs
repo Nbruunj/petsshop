@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,6 +19,7 @@ using PetShop.Infrastructure.Data;
 using PetShop.Infrastructure.Database;
 using PetShop.Infrastructure.Database.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PetShop.Core.Entity;
 using PetShop.Infrastructure.Database.Helpers;
@@ -37,6 +38,16 @@ namespace PetShop.RestAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<PetShopContext>(opt => opt.UseSqlite("Data Source=petShopApp.db"));
+            services.AddScoped<IPetRepository, PetSqlRepository>();
+            services.AddScoped<IPetService, PetService>();
+
+            services.AddScoped<IOwnerRepository, OwnerSqlRepository>();
+            services.AddScoped<IOwnerService, OwnerService>();
+
+            services.AddScoped<IPetTypeRepository, PetTypeSqlRepository>();
+            services.AddScoped<IPetTypeService, PetTypeService>();
+
             Byte[] secretBytes = new byte[40];
             Random rand = new Random();
             rand.NextBytes(secretBytes);
@@ -58,41 +69,43 @@ namespace PetShop.RestAPI
             });
 
 
-            // Register repositories for dependency injection
-            services.AddScoped<IUserRepository<TodoItem>, TodoItemRepository>();
-            services.AddScoped<IUserRepository<User>, UserRepository>();
+            
 
-            // Register database initializer
-            services.AddTransient<IDBInitializer, DBInitializer>();
+           services.AddDbContext<PetShopContext>(opt => opt.UseInMemoryDatabase("todolist"));
 
-            // Register the AuthenticationHelper in the helpers folder for dependency
-            // injection. It must be registered as a singleton service. The AuthenticationHelper
-            // is instantiated with a parameter. The parameter is the previously created
-            // "secretBytes" array, which is used to generate a key for signing JWT tokens,
-            services.AddSingleton<IAuthenticationHelper>(new
-                AuthenticationHelper(secretBytes));
+           // Register repositories for dependency injection
+           services.AddScoped<IUserRepository<TodoItem>, TodoItemRepository>();
+           services.AddScoped<IUserRepository<User>, UserRepository>();
 
-            // Configure the default CORS policy.
-            services.AddCors(options =>
-                options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-                    })
-            );
+           // Register database initializer
+           services.AddTransient<IDBInitializer, DBInitializer>();
 
+<<<<<<< HEAD
             services.AddDbContext<PetShopContext>(
                 opt => opt.UseInMemoryDatabase("budo")
                 );
 
             services.AddScoped<IPetRepository, PetSqlRepository>();
             services.AddScoped<IPetService, PetService>();
+=======
+           // Register the AuthenticationHelper in the helpers folder for dependency
+           // injection. It must be registered as a singleton service. The AuthenticationHelper
+           // is instantiated with a parameter. The parameter is the previously created
+           // "secretBytes" array, which is used to generate a key for signing JWT tokens,
+           services.AddSingleton<IAuthenticationHelper>(new
+               AuthenticationHelper(secretBytes));
+>>>>>>> 339ef73a541668c5b50d344d03cc3000e66c8dc0
 
-            services.AddScoped<IOwnerRepository, OwnerSqlRepository>();
-            services.AddScoped<IOwnerService, OwnerService>();
+           // Configure the default CORS policy.
+           services.AddCors(options =>
+               options.AddDefaultPolicy(
+                   builder =>
+                   {
+                       builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                   })
+           );
 
-            services.AddScoped<IPetTypeRepository, PetTypeSqlRepository>();
-            services.AddScoped<IPetTypeService, PetTypeService>();
+            
 
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
