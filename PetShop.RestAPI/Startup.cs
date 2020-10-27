@@ -82,7 +82,7 @@ namespace PetShop.RestAPI
             );
 
             services.AddDbContext<PetShopContext>(
-                opt => opt.UseInMemoryDatabase("ThaDb")
+                opt => opt.UseInMemoryDatabase("budo")
                 );
 
             services.AddScoped<IPetRepository, PetSqlRepository>();
